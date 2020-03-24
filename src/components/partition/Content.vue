@@ -222,7 +222,7 @@ export default {
                         that.RootWidth = ContentRoot.clientWidth;
                         // 获取 前台分区页 内容缩略区组件 外部容器宽度：20px 左右 margin
                         that.ContainerWidth = ContentRoot.children[0].clientWidth + 40;
-
+                        
                         // 分页首页不执行
                         if (!first) {
                             // 动态调整 模板根结点 样式
@@ -230,35 +230,37 @@ export default {
                             // 手动调整 分页 每页的资源数量：obj.limit 每页资源数
                             that.CurrentPaging = obj.limit;
                             // 自动获取当前页的资源内容：obj.curr 当前页码
-                            await that.PagingContentFuc(obj.curr);
-                            // 动态补齐 空白位置
-                            that.PaingRank()
-                        };
-
-                        // 获取 特殊标志容器对象
-                        let SymbolNode = document.getElementsByClassName('SymbolContainer');
-                        // 获取 特殊标志对象
-                        let SymbolChild = document.getElementsByClassName('Symbol');
-                        // 对所有节点进行遍历
-                        for (let i = 0; i < SymbolChild.length; i++) {
-                            // 判断 特殊标志 是否存在
-                            if (SymbolChild[i].innerHTML === '') {
-                                // 不存在则 隐藏 特殊标志容器对象
-                                SymbolNode[i].style.display = 'none'
-                            } else {
-                                // 存在则 显示 特殊标志容器对象
-                                SymbolNode[i].style.display = 'flex'
-                            }
+                            await that.PagingContentFuc(obj.curr)
                         }
                     }
                 })
             })
+        },
+        // 前台分区页 内容缩略区组件 动态更新 Symbol 标志
+        Symbol() {
+            // 获取 特殊标志容器对象
+            let SymbolNode = document.getElementsByClassName('SymbolContainer');
+            // 获取 特殊标志对象
+            let SymbolChild = document.getElementsByClassName('Symbol');
+            // 对所有节点进行遍历
+            for (let i = 0; i < SymbolChild.length; i++) {
+                // 判断 特殊标志 是否存在
+                if (SymbolChild[i].innerHTML === '') {
+                    // 不存在则 隐藏 特殊标志容器对象
+                    SymbolNode[i].style.display = 'none'
+                } else {
+                    // 存在则 显示 特殊标志容器对象
+                    SymbolNode[i].style.display = 'flex'
+                }
+            }
         }
     },
     // 组件挂载完毕 用户可以看到页面 自动执行这个 生命周期函数
     mounted() {
         // 保存 this 指向性
         let that = this;
+        // 获取 模板根节点 对象
+        let ContentRoot = document.getElementsByClassName('Content-root')[0];
         
 
         // 通过 async await 来处异步函数问题，使其内部同步化处理
@@ -288,8 +290,10 @@ export default {
     },
     // Data 数据 与 页面 保持同步更新后，执行该生命周期函数。
     updated() {
-        // 前台分区页 内容缩略区组件 底部分页栏加载方法
-        this.laypagePaing(this)
+        // 动态更新 节点 Symbol 标志
+        this.Symbol();
+        // 动态补齐 空白位置
+        this.PaingRank()
     },
     // 监视数据的变化 自动执行函数
     watch: {
@@ -298,7 +302,9 @@ export default {
             // 保存 检索资源总量 结果
             this.TotalContent = newVal.TotalContent;
             // 保存 当前页检索资源 结果
-            this.CurrentContent = newVal.CurrentContent
+            this.CurrentContent = newVal.CurrentContent;
+            // 重新加载 底部分页栏加载方法
+            this.laypagePaing(this)
         },
         // 监视 筛选组件 关键字
         FKeyWord: function(newVal, oldVal) {
