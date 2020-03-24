@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>拉片网后台管理系统</title>
+    <link rel="stylesheet" type="text/css" href="/src/lib/layui/dist/css/layui.css">
+    <!-- head 区域 模板填充区 -->
+    {{ block 'head' }}{{ /block }}
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+
+        <!-- ** 头部区域 ** -->
+        <div class="layui-header">
+            <!-- 头部区域 Logo -->
+            <div class="layui-logo">FilmSalon</div>
+            <!-- 头部区域 横向导航栏 -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item"><a href="/management/">首页</a></li>
+                <li class="layui-nav-item"><a href="/management/FilmsLibrary/">资料馆</a></li>
+                <li class="layui-nav-item"><a href="/management/AcademicRoom/">学术室</a></li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">课程管理</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/management/FilmsCourse/">影视动漫课程</a></dd>
+                        <dd><a href="/management/OtherCourse/Videos/">其他视频课程</a></dd>
+                        <dd><a href="/management/OtherCourse/ImageText/">其他图文教程</a></dd>
+                    </dl>
+                </li>
+            </ul>
+            <!-- 头部区域 用户登录信息区 -->
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img"> 贤心
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="">基本资料</a></dd>
+                        <dd><a href="">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="">退出</a></li>
+            </ul>
+        </div>
+
+        <!-- ** 左侧导航区域 ** -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-nav-itemed">
+                        <a class="" href="javascript:;">用户管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">账号管理</a></dd>
+                            <dd><a href="javascript:;">黑名单管理</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:;">网站状态管理</a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="javascript:;">前台</a></dd>
+                            <dd><a href="javascript:;">后台</a></dd>
+                            <dd><a href="">数据库</a></dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item"><a href="">信息反馈</a></li>
+                    <li class="layui-nav-item"><a href="">其他</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ** 内容主体区域 ** -->
+        <div class="layui-body">
+            <!-- body 区域 模板填充区 -->
+            {{ block 'content' }}{{ /block }}
+        </div>
+
+        <!-- ** 底部固定区域 ** -->
+        <div class="layui-footer layui-row">
+            <span class="layui-col-xs12 layui-col-sm12 layui-col-md6">CopyRight©2019 小楼楼阁灬轩听雨. All Rights Reserved</span>
+            <span class="layui-col-xs12 layui-col-sm12 layui-col-md6">FilmSalon & 拉片网 · Alpha</span>
+        </div>
+    </div>
+
+    <!-- ** js 代码区域 ** -->
+    <script src="/src/lib/layui/dist/layui.all.js" charset="utf-8"></script>
+
+    <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- layui.js 代码区域 -->
+    <script type="text/javascript">
+        /* 加载 layui 模块系统 */
+        layui.use(['element', 'form'], function() {
+            // 加载 元素操作 模块
+            var element = layui.element;
+            // 加载 表单 模块
+            var form = layui.form
+        });
+    </script>
+
+    <!-- script 区域 模板填充区 -->
+    {{ block 'script' }}{{ /block }}
+</body>
+
+</html>
