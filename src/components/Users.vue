@@ -485,8 +485,8 @@ export default {
 }
 // 前台分区页 用户信息组件 头像 基本样式
 .HeadImage {
-    display: flex; position: relative; width: 40%; height: 70%;
-    border: 1px solid rgba($color: #A9A9A9, $alpha: 1.0); border-radius: 100px;
+    display: flex; position: relative; width: 40%; height: 80%;
+    border: 1px solid rgba($color: #A9A9A9, $alpha: 1.0); border-radius: 200px;
     overflow: hidden; cursor: pointer
 }
 .HeadImage img {

@@ -44,6 +44,9 @@ var dbScroll = require('../models/Scroll.js')
 
 /* 设置 公共路径 */
 
+// 前后台路径根地址
+var rootPath = 'http://localhost:3000';
+
 // 前台 首页 相对路径
 var Index = path.join(__dirname, '../dist/index.html/');
 // 前台 首页 图片轮播区 绝对路径
@@ -51,7 +54,7 @@ var Scroll = '/public/images/Scroll/';
 // 前台 首页 图片轮播区 相对路径
 var ScrollPath = path.join(__dirname, '../public/images/Scroll/');
 // 前台 首页 图片轮播区 图片 绝对路径
-var ScrollRPath = '/public/images/Scroll/';
+var ScrollRPath = rootPath + '/public/images/Scroll/';
 // 前台 首页 用户贡献榜区域 绝对路径
 var UsersContributionPath = '/index/contribution/';
 // 前台 首页 学术热度值榜区域 绝对路径
@@ -63,28 +66,28 @@ var FilmCoursePath = '/index/filmCourse/';
 // 前台 首页 影视课程 视频类图片 相对路径
 var FilmVCoursePath = path.join(__dirname, '../public/images/Course/Videos/');
 // 前台 首页 影视课程 视频类图片 绝对路径
-var FilmVCourseRPath = '/public/images/Course/Videos/';
+var FilmVCourseRPath = rootPath + '/public/images/Course/Videos/';
 // 前台 首页 影视课程 图文类图片 相对路径
 var FilmITCoursePath = path.join(__dirname, '../public/images/Course/ImageText/');
 // 前台 首页 影视课程 图文类图片 绝对路径
-var FilmITCourseRPath = '/public/images/Course/ImageText/';
+var FilmITCourseRPath = rootPath + '/public/images/Course/ImageText/';
 // 前台 首页 其他课程热度值榜区域 绝对路径
 var OtherCoursePath = '/index/otherCourse/';
 // 前台 首页 其他课程 视频类图片 相对路径
 var OtherVCoursePath = path.join(__dirname, '../public/images/Other/Videos/');
 // 前台 首页 其他课程 视频类图片 绝对路径
-var OtherVCourseRPath = '/public/images/Other/Videos/';
+var OtherVCourseRPath = rootPath + '/public/images/Other/Videos/';
 // 前台 首页 其他课程 图文类图片 相对路径
 var OtherITCoursePath = path.join(__dirname, '../public/images/Other/ImageText/');
 // 前台 首页 其他课程 图文类图片 绝对路径
-var OtherITCourseRPath = '/public/images/Other/ImageText/';
+var OtherITCourseRPath = rootPath + '/public/images/Other/ImageText/';
 
 // 前台 分区页 用户登录 绝对路径
 var UserLogin = '/login/';
 // 前台 分区页 用户头像 相对路径
 var UserRHeadPortrait = path.join(__dirname, '../public/images/Person/');
 // 前台 分区页 用户头像 绝对路径
-var UserHeadPortrait = '/public/images/Person/';
+var UserHeadPortrait = rootPath + '/public/images/Person/';
 // 前台 分区页 用户身份验证 绝对路径
 var UserVerification = '/verify/';
 // 前台 分区页 资料馆 内容缩略区组件 初始化 绝对路径
@@ -94,7 +97,7 @@ var PagingContentPath = '/FilmsLibrary/content/paging/';
 // 前台 分区页 资料馆 内容缩略区组件 封面 相对路径
 var FilmsLibraryCoverRPath = path.join(__dirname, '../public/images/FilmsLibrary/cover/');
 // 前台 分区页 资料馆 内容缩略区组件 封面 绝对路径
-var FilmsLibraryCoverPath = '/public/images/FilmsLibrary/cover/';
+var FilmsLibraryCoverPath = rootPath + '/public/images/FilmsLibrary/cover/';
 // 前台 分区页 资料馆 筛选栏组件 资源检索 绝对路径
 var RFilterPath = '/FilmsLibrary/filter/';
 
@@ -788,7 +791,11 @@ router.post(InitializeContentPath, async function(request, response) {
     try {
         // 封装 要读取的 数据
         dbData = [
-            'Symbol', 'Director', 'Time', 'ChineseName', 'EnglishName'
+            'Symbol', 'Director', 'Time', 'ChineseName', 'EnglishName',
+            'Country', 'Area', 'type', 'Writter', 'TheLocalBoxOffice',
+            'ChinaBoxOffice', 'WorldWideBoxOffice', 'IMDB', 'TOMATOMETER',
+            'ReviewsCounted', 'AUDIENCESCORE', 'UserRatings', 'MetaScore',
+            'UserScore', 'DouBan', 'Mtime', 'Notes'
         ];
         // 封装 要排序的 数据
         dbOption = {
@@ -819,6 +826,57 @@ router.post(InitializeContentPath, async function(request, response) {
             // 封装 内容缩略区组件 名称信息
             InitializeData.content.contents[index]
                 ['Name'] = item.ChineseName + '[' + item.EnglishName + ']';
+            // 封装 内容缩略区组件 国家信息
+            InitializeData.content.contents[index]
+                ['Country'] = item.Country;
+            // 封装 内容缩略区组件 地区信息
+            InitializeData.content.contents[index]
+                ['Area'] = item.Area;
+            // 封装 内容缩略区组件 类型信息
+            InitializeData.content.contents[index]
+                ['type'] = item.type;
+            // 封装 内容缩略区组件 编剧信息
+            InitializeData.content.contents[index]
+                ['Writter'] = item.Writter;
+            // 封装 内容缩略区组件 本地票房信息
+            InitializeData.content.contents[index]
+                ['TheLocalBoxOffice'] = item.TheLocalBoxOffice;
+            // 封装 内容缩略区组件 中国票房信息
+            InitializeData.content.contents[index]
+                ['ChinaBoxOffice'] = item.ChinaBoxOffice;
+            // 封装 内容缩略区组件 世界票房信息
+            InitializeData.content.contents[index]
+                ['WorldWideBoxOffice'] = item.WorldWideBoxOffice;
+            // 封装 内容缩略区组件 IMDB 评分信息
+            InitializeData.content.contents[index]
+                ['IMDB'] = item.IMDB;
+            // 封装 内容缩略区组件 烂番茄专业评分信息
+            InitializeData.content.contents[index]
+                ['TOMATOMETER'] = item.TOMATOMETER;
+            // 封装 内容缩略区组件 烂番茄专业人数信息
+            InitializeData.content.contents[index]
+                ['ReviewsCounted'] = item.ReviewsCounted;
+            // 封装 内容缩略区组件 烂番茄观众评分信息
+            InitializeData.content.contents[index]
+                ['AUDIENCESCORE'] = item.AUDIENCESCORE;
+            // 封装 内容缩略区组件 烂番茄观众人数信息
+            InitializeData.content.contents[index]
+                ['UserRatings'] = item.UserRatings;
+            // 封装 内容缩略区组件 MTC 专业评分信息
+            InitializeData.content.contents[index]
+                ['MetaScore'] = item.MetaScore;
+            // 封装 内容缩略区组件 MTC 观众评分信息
+            InitializeData.content.contents[index]
+                ['UserScore'] = item.UserScore;
+            // 封装 内容缩略区组件 豆瓣评分信息
+            InitializeData.content.contents[index]
+                ['DouBan'] = item.DouBan;
+            // 封装 内容缩略区组件 时光网评分信息
+            InitializeData.content.contents[index]
+                ['Mtime'] = item.Mtime;
+            // 封装 内容缩略区组件 备注信息
+            InitializeData.content.contents[index]
+                ['Notes'] = item.Notes;
             // 设置 默认 封面地址
             InitializeData.content.contents[index]
                 ['Src'] = '';
@@ -937,7 +995,11 @@ router.post(RFilterPath, async function(request, response) {
         );
         // 封装 要读取的 数据
         dbData = [
-            'Symbol', 'Director', 'Time', 'ChineseName', 'EnglishName'
+            'Symbol', 'Director', 'Time', 'ChineseName', 'EnglishName',
+            'Country', 'Area', 'type', 'Writter', 'TheLocalBoxOffice',
+            'ChinaBoxOffice', 'WorldWideBoxOffice', 'IMDB', 'TOMATOMETER',
+            'ReviewsCounted', 'AUDIENCESCORE', 'UserRatings', 'MetaScore',
+            'UserScore', 'DouBan', 'Mtime', 'Notes'
         ];
         // 封装 要排序的 数据
         switch (keyWord.Other) {
@@ -979,6 +1041,57 @@ router.post(RFilterPath, async function(request, response) {
             // 封装 内容缩略区组件 名称信息
             FilterData.content.CurrentContent[index]
                 ['Name'] = item.ChineseName + '[' + item.EnglishName + ']';
+            // 封装 内容缩略区组件 国家信息
+            FilterData.content.contents[index]
+                ['Country'] = item.Country;
+            // 封装 内容缩略区组件 地区信息
+            FilterData.content.contents[index]
+                ['Area'] = item.Area;
+            // 封装 内容缩略区组件 类型信息
+            FilterData.content.contents[index]
+                ['type'] = item.type;
+            // 封装 内容缩略区组件 编剧信息
+            FilterData.content.contents[index]
+                ['Writter'] = item.Writter;
+            // 封装 内容缩略区组件 本地票房信息
+            FilterData.content.contents[index]
+                ['TheLocalBoxOffice'] = item.TheLocalBoxOffice;
+            // 封装 内容缩略区组件 中国票房信息
+            FilterData.content.contents[index]
+                ['ChinaBoxOffice'] = item.ChinaBoxOffice;
+            // 封装 内容缩略区组件 世界票房信息
+            FilterData.content.contents[index]
+                ['WorldWideBoxOffice'] = item.WorldWideBoxOffice;
+            // 封装 内容缩略区组件 IMDB 评分信息
+            FilterData.content.contents[index]
+                ['IMDB'] = item.IMDB;
+            // 封装 内容缩略区组件 烂番茄专业评分信息
+            FilterData.content.contents[index]
+                ['TOMATOMETER'] = item.TOMATOMETER;
+            // 封装 内容缩略区组件 烂番茄专业人数信息
+            FilterData.content.contents[index]
+                ['ReviewsCounted'] = item.ReviewsCounted;
+            // 封装 内容缩略区组件 烂番茄观众评分信息
+            FilterData.content.contents[index]
+                ['AUDIENCESCORE'] = item.AUDIENCESCORE;
+            // 封装 内容缩略区组件 烂番茄观众人数信息
+            FilterData.content.contents[index]
+                ['UserRatings'] = item.UserRatings;
+            // 封装 内容缩略区组件 MTC 专业评分信息
+            FilterData.content.contents[index]
+                ['MetaScore'] = item.MetaScore;
+            // 封装 内容缩略区组件 MTC 观众评分信息
+            FilterData.content.contents[index]
+                ['UserScore'] = item.UserScore;
+            // 封装 内容缩略区组件 豆瓣评分信息
+            FilterData.content.contents[index]
+                ['DouBan'] = item.DouBan;
+            // 封装 内容缩略区组件 时光网评分信息
+            FilterData.content.contents[index]
+                ['Mtime'] = item.Mtime;
+            // 封装 内容缩略区组件 备注信息
+            FilterData.content.contents[index]
+                ['Notes'] = item.Notes;
             // 设置 默认 封面地址
             FilterData.content.CurrentContent[index]
                 ['Src'] = '';
@@ -1016,6 +1129,8 @@ router.post(PagingContentPath, async function(request, response) {
     let CurrentCount = request.body.CurrentCount;
     // 获取 当前分页的页码数
     let page = request.body.Count;
+    // 获取 筛选关键字
+    let keyWord = request.body;
     // 声明 查询的数据
     let db = {};
     // 声明 查询的数据模型
@@ -1031,17 +1146,96 @@ router.post(PagingContentPath, async function(request, response) {
     // 声明 数据接收中间变量
     let FilmData = [];
     let FilmImage = [];
+    let time = '';
 
     try {
+        // 解析 要查询的 数据
+        // 国家地区
+        keyWord.CountryArea && (
+            db.$or = [
+                { Country: { $all: [keyWord.CountryArea] } },
+                { Area: { $all: [keyWord.CountryArea] } }
+            ]
+        );
+        // 年代
+        switch (keyWord.Time) {
+            case '2013-2011':
+                db.Time = {
+                    $lte: new Date(keyWord.Time.split('-')[0]).toJSON(),
+                    $gte: new Date(keyWord.Time.split('-')[1]).toJSON()
+                };
+                break;
+            case '2010-2006':
+                db.Time = {
+                    $lte: new Date(keyWord.Time.split('-')[0]).toJSON(),
+                    $gte: new Date(keyWord.Time.split('-')[1]).toJSON()
+                };
+                break;
+            case '2005-2000':
+                db.Time = {
+                    $lte: new Date(keyWord.Time.split('-')[0]).toJSON(),
+                    $gte: new Date(keyWord.Time.split('-')[1]).toJSON()
+                };
+                break;
+            case '90年代':
+                db.Time = {
+                    $lte: new Date('2000').toJSON(),
+                    $gte: new Date('1990').toJSON()
+                };
+                break;
+            case '80年代':
+                db.Time = {
+                    $lte: new Date('1990').toJSON(),
+                    $gte: new Date('1980').toJSON()
+                };
+                break;
+            case '其他':
+                db.Time = {
+                    $not: { $gte: new Date('1980').toJSON() }
+                };
+                break;
+            case '':
+                break;
+            case undefined:
+                break;
+            default:
+                time = (Number(keyWord.Time) + 1).toString();
+                db.Time = {
+                    $lte: new Date(time).toJSON(),
+                    $gte: new Date(keyWord.Time).toJSON()
+                };
+                break
+        };
+        // 类型
+        keyWord.Type && (
+            db.type = {
+                $all: [keyWord.type]
+            }
+        );
+        // 封装 要排序的 数据
+        switch (keyWord.Other) {
+            case '热度值':
+                dbOption = {
+                    limit: CurrentCount,
+                    skip: (page - 1) * CurrentCount,
+                    sort: '-Ranking'
+                };
+                break;
+            default:
+                dbOption = {
+                    limit: CurrentCount,
+                    skip: (page - 1) * CurrentCount
+                };
+                break
+        };
         // 封装 要读取的 数据
         dbData = [
-            'Symbol', 'Director', 'Time', 'ChineseName', 'EnglishName'
+            'Symbol', 'Director', 'Time', 'ChineseName', 'EnglishName',
+            'Country', 'Area', 'type', 'Writter', 'TheLocalBoxOffice',
+            'ChinaBoxOffice', 'WorldWideBoxOffice', 'IMDB', 'TOMATOMETER',
+            'ReviewsCounted', 'AUDIENCESCORE', 'UserRatings', 'MetaScore',
+            'UserScore', 'DouBan', 'Mtime', 'Notes'
         ];
-        // 封装 要排序的 数据
-        dbOption = {
-            limit: CurrentCount,
-            skip: (page - 1) * CurrentCount
-        };
         // 实例化 数据库操作对象
         dbObject = new dbHandle(dbmodel);
         // 查询数据
@@ -1064,6 +1258,57 @@ router.post(PagingContentPath, async function(request, response) {
             // 封装 内容缩略区组件 名称信息
             PageData.content[index]
                 ['Name'] = item.ChineseName + '[' + item.EnglishName + ']';
+            // 封装 内容缩略区组件 国家信息
+            PageData.content[index]
+                ['Country'] = item.Country;
+            // 封装 内容缩略区组件 地区信息
+            PageData.content[index]
+                ['Area'] = item.Area;
+            // 封装 内容缩略区组件 类型信息
+            PageData.content[index]
+                ['type'] = item.type;
+            // 封装 内容缩略区组件 编剧信息
+            PageData.content[index]
+                ['Writter'] = item.Writter;
+            // 封装 内容缩略区组件 本地票房信息
+            PageData.content[index]
+                ['TheLocalBoxOffice'] = item.TheLocalBoxOffice;
+            // 封装 内容缩略区组件 中国票房信息
+            PageData.content[index]
+                ['ChinaBoxOffice'] = item.ChinaBoxOffice;
+            // 封装 内容缩略区组件 世界票房信息
+            PageData.content[index]
+                ['WorldWideBoxOffice'] = item.WorldWideBoxOffice;
+            // 封装 内容缩略区组件 IMDB 评分信息
+            PageData.content[index]
+                ['IMDB'] = item.IMDB;
+            // 封装 内容缩略区组件 烂番茄专业评分信息
+            PageData.content[index]
+                ['TOMATOMETER'] = item.TOMATOMETER;
+            // 封装 内容缩略区组件 烂番茄专业人数信息
+            PageData.content[index]
+                ['ReviewsCounted'] = item.ReviewsCounted;
+            // 封装 内容缩略区组件 烂番茄观众评分信息
+            PageData.content[index]
+                ['AUDIENCESCORE'] = item.AUDIENCESCORE;
+            // 封装 内容缩略区组件 烂番茄观众人数信息
+            PageData.content[index]
+                ['UserRatings'] = item.UserRatings;
+            // 封装 内容缩略区组件 MTC 专业评分信息
+            PageData.content[index]
+                ['MetaScore'] = item.MetaScore;
+            // 封装 内容缩略区组件 MTC 观众评分信息
+            PageData.content[index]
+                ['UserScore'] = item.UserScore;
+            // 封装 内容缩略区组件 豆瓣评分信息
+            PageData.content[index]
+                ['DouBan'] = item.DouBan;
+            // 封装 内容缩略区组件 时光网评分信息
+            PageData.content[index]
+                ['Mtime'] = item.Mtime;
+            // 封装 内容缩略区组件 备注信息
+            PageData.content[index]
+                ['Notes'] = item.Notes;
             // 设置 默认 封面地址
             PageData.content[index]
                 ['Src'] = '';

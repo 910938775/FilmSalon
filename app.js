@@ -4,6 +4,19 @@ var express = require('express')
 // 开启 后端服务
 var app = express()
 
+// 处理跨域问题：Access-Control-Allow-Origin
+app.all('*', function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With');
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    // 返回前台的 预防问 OPTIONS
+    if (req.method === "OPTIONS") {
+        res.sendStatus(204)
+    } else {
+        next()
+    }
+})
+
 // 导入 express-art-template 后端模板引擎
 app.engine('html', require('express-art-template'));
 // 自定义 views 视图区 文件路径
@@ -47,12 +60,22 @@ app.use(history({
     // 配置 前台浏览器地址栏 默认的 后端路由指向
     index: '/',
     // 配置 前台浏览器地址栏 后端路由指向
-    rewrites: [{ // 后台首页 /management 开头 后台路由
-        from: /^\/management.*$/,
-        to: function(data) {
-            return '/management'
+    rewrites: [
+        // 后台首页 /management 开头 后台路由
+        {
+            from: /^\/management.*$/,
+            to: function(data) {
+                return '/management'
+            }
+        },
+        // 前台首页 /public/images/Scroll/ 滚动栏 后台路由
+        {
+            from: /^\/public\/images\/Scroll\/$/,
+            to: function(data) {
+                return '/public/images/Scroll/'
+            }
         }
-    }]
+    ]
 }))
 
 // 开放 前端 静态资源

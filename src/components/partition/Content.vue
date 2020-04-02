@@ -6,7 +6,7 @@
         <!-- 前台分区页 内容缩略区组件 外部容器 -->
         <div class="ContentContainer" v-for="(item, i) in this.CurrentContent" :key="i">
             <!-- 前台分区页 内容缩略区组件 图像外部容器 -->
-            <div class="ImageContainer">
+            <div class="ImageContainer" @mouseenter="GetFilm(item)" @mouseleave="ClearFilm()">
                 <!-- 前台分区页 内容缩略区组件 特殊标志容器 -->
                 <div class="SymbolContainer">
                     <!-- 前台分区页 内容缩略区组件 特殊标志 -->
@@ -78,7 +78,7 @@ export default {
             // 前台分区页 内容缩略区组件 底部分页栏外部容器高度
             PagingHeight: 80,
             // 前台分区页 筛选栏组件 关键字
-            KeyWord: ''
+            KeyWord: {}
         }
     },
     // 父组件 数据
@@ -121,13 +121,13 @@ export default {
         },
         // 前台分区页 内容缩略区组件 分页内容 方法
         async PagingContentFuc(Count) {
+            // 封装 请求内容
+            this.KeyWord.Count = Count;
+            this.KeyWord.CurrentCount = this.CurrentPaging;
             // 封装 请求数据 对象
             let getData = {
                 pattern: 'post',
-                content: {
-                    Count: Count,
-                    CurrentCount: this.CurrentPaging
-                },
+                content: this.KeyWord,
                 url: this.PagingContent,
                 tool: this
             };
@@ -253,6 +253,17 @@ export default {
                     SymbolNode[i].style.display = 'flex'
                 }
             }
+        },
+
+        // 获取 影视相关信息方法
+        GetFilm(Info) {
+            // 触发父组件方法
+            this.$emit('InfoGet', Info)
+        },
+        // 清除 影视相关信息方法
+        ClearFilm() {
+            // 触发父组件方法
+            this.$emit('InfoClear')
         }
     },
     // 组件挂载完毕 用户可以看到页面 自动执行这个 生命周期函数

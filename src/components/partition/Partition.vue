@@ -7,7 +7,7 @@
         <div class="Info-Container">
             <!-- 前台分区页 信息栏组件 -->
             <div class="Information">
-                <Information></Information>
+                <Information ref="info"></Information>
             </div>
 
             <!-- 前台分区页 筛选栏组件 -->
@@ -19,8 +19,8 @@
 
         <!-- 前台分区页 内容缩略区域组件 -->
         <div class="Content">
-            <!-- 向子组件传递 筛选数据 关键字 -->
-            <Content :FilterData="this.FilterData" :FKeyWord="this.FilterKeyWord" ref="Contents"></Content>
+            <!-- 向子组件传递 筛选数据 关键字 获取与清除影视信息方法 -->
+            <Content :FilterData="this.FilterData" :FKeyWord="this.FilterKeyWord" @InfoGet="this.InfoGet" @InfoClear="this.InfoClear" ref="Contents"></Content>
         </div>
 
         <!-- 前台 用户信息栏组件 -->
@@ -200,6 +200,17 @@ export default {
             let count = this.$refs.Contents.CurrentPaging;
             // 返回数值
             return count
+        },
+
+        // 前台分区页 信息栏组件 获取 影视相关信息方法
+        InfoGet(Info) {
+            // 触发子组件方法
+            this.$refs.info.GetFilmInfo(Info)
+        },
+        // 前台分区页 信息栏组件 清除 影视相关信息方法
+        InfoClear() {
+            // 触发子组件方法
+            this.$refs.info.ClearFilmInfo()
         }
     },
     // 组件挂载完毕 用户可以看到页面 自动执行这个 生命周期函数

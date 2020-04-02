@@ -1,7 +1,7 @@
 {
     "name": "filmsalon",
     "version": "1.0.0",
-    "description": "",
+    "description": "拉片网：专业影视动漫剧学习网站",
     "main": "main.js",
     "dependencies": {
         "art-template": "^4.13.2",
