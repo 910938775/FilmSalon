@@ -21,7 +21,7 @@
         "mongoose": "^4.13.19",
         "mui": "0.0.1",
         "multer": "^1.4.2",
-        "node-sass": "^4.13.0",
+        "node-sass": "^4.13.1",
         "open-iconic": "git+https://github.com/iconic/open-iconic.git",
         "popper.js": "^1.16.0",
         "redis": "^3.0.2",
