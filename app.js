@@ -9,6 +9,8 @@ app.all('*', function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With');
     res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
+    // 允许跨域操作 cookie session 等
+    res.header('Access-Control-Allow-Credentials', true);
     // 返回前台的 预防问 OPTIONS
     if (req.method === "OPTIONS") {
         res.sendStatus(204)
@@ -35,6 +37,10 @@ app.use(bodyparser.json())
 
 // 导入 Session 处理插件
 var session = require('express-session');
+// 导入 redis 数据库客户端
+var client = require('./models/dbRedis.js');
+// 导入 redis 插件
+var redisStore = require('connect-redis')(session);
 // 手动安装 Session 中间件
 app.use(session({
     // 设置保存在客户端 cookie 中的名称
@@ -51,7 +57,15 @@ app.use(session({
         maxAge: 7 * 24 * 60 * 60 * 1000,
         // 不允许脚本文件操作 cookie，防止 xss 攻击
         httpOnly: true
-    }
+    },
+    // 保存 session 到 redis 数据库
+    store: new redisStore({
+        host: '127.0.0.1',
+        port: '6379',
+        db: 0,
+        pass: '',
+        client: client
+    })
 }))
 
 // 导入 处理 vue-router history 模式 中间件
@@ -73,6 +87,104 @@ app.use(history({
             from: /^\/public\/images\/Scroll\/$/,
             to: function(data) {
                 return '/public/images/Scroll/'
+            }
+        },
+        // 前台首页 /index/contribution/ 用户贡献榜 后台路由
+        {
+            from: /^\/index\/contribution\/$/,
+            to: function(data) {
+                return '/index/contribution/'
+            }
+        },
+        // 前台首页 /index/academic/ 学术热度值 后台路由
+        {
+            from: /^\/index\/academic\/$/,
+            to: function(data) {
+                return '/index/academic/'
+            }
+        },
+        // 前台首页 /index/film/ 影视热度值 后台路由
+        {
+            from: /^\/index\/film\/$/,
+            to: function(data) {
+                return '/index/film/'
+            }
+        },
+        // 前台首页 /index/filmCourse/ 影视课程热度值 后台路由
+        {
+            from: /^\/index\/filmCourse\/$/,
+            to: function(data) {
+                return '/index/filmCourse/'
+            }
+        },
+        // 前台首页 /index/otherCourse/ 其他课程热度值 后台路由
+        {
+            from: /^\/index\/otherCourse\/$/,
+            to: function(data) {
+                return '/index/otherCourse/'
+            }
+        },
+        // 前台分区页 /repeatVerify/ 用户数据验证 后台路由
+        {
+            from: /^\/repeatVerify\/$/,
+            to: function(data) {
+                return '/repeatVerify/'
+            }
+        },
+        // 前台分区页 /login/ 用户登录 后台路由
+        {
+            from: /^\/login\/$/,
+            to: function(data) {
+                return '/login/'
+            }
+        },
+        // 前台分区页 /verify/ 用户身份验证 后台路由
+        {
+            from: /^\/verify\/$/,
+            to: function(data) {
+                return '/verify/'
+            }
+        },
+        // 前台分区页 /register/ 用户注册 后台路由
+        {
+            from: /^\/register\/$/,
+            to: function(data) {
+                return '/register/'
+            }
+        },
+        // 前台分区页 /verifyPhone/ 用户注册验证码 后台路由
+        {
+            from: /^\/verifyPhone\/$/,
+            to: function(data) {
+                return '/verifyPhone/'
+            }
+        },
+        // 前台分区页 /modify/account/ 修改账户 后台路由
+        {
+            from: /^\/modify\/account\/$/,
+            to: function(data) {
+                return '/modify/account/'
+            }
+        },
+        // 前台分区页 /FilmsLibrary/content/ 影视资源初始化 后台路由
+        {
+            from: /^\/FilmsLibrary\/content\/$/,
+            to: function(data) {
+                return '/FilmsLibrary/content/'
+            }
+        },
+        // 前台分区页 /FilmsLibrary/content/paging/ 影视资源分页 后台路由
+        {
+            from: /^\/FilmsLibrary\/content\/paging\/$/,
+            to: function(data) {
+                return '/FilmsLibrary/content/paging/'
+            }
+        },
+        // 前台分区页 /FilmsLibrary/filter/ 影视资源筛选 后台路由
+        {
+            from: /^\/FilmsLibrary\/filter\/$/,
+            to: function(data) {
+                return '/FilmsLibrary/filter/'
             }
         }
     ]

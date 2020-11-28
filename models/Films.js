@@ -102,7 +102,7 @@ var FilmsalonSchema = new Schema({
                     // 烂番茄专业人士新鲜度（100%）
                     TOMATOMETER: {
                         type: String,
-                        min: 0,
+                        minlength: 1,
                         default: '0%'
                     },
                     // 烂番茄专业人士人数
@@ -114,7 +114,7 @@ var FilmsalonSchema = new Schema({
                     // 烂番茄观众新鲜度（100%）
                     AUDIENCESCORE: {
                         type: String,
-                        min: 0,
+                        minlength: 1,
                         default: '0%'
                     },
                     // 烂番茄观众人数
@@ -129,7 +129,7 @@ var FilmsalonSchema = new Schema({
                     // MTC专业人士评分（100%）
                     MetaScore: {
                         type: String,
-                        min: 0,
+                        minlength: 1,
                         default: '0%'
                     },
                     // MTC观众评分（10）

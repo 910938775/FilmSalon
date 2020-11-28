@@ -24,17 +24,17 @@
 
                 <!-- 支持循环，需要重复图片 最后一个 节点 -->
                 <div class="mui-slider-item mui-slider-item-duplicate">
-                    <a href=""><img :src="this.readdir[this.readdir.length-1]" /></a>
+                    <a :href="this.readdir[this.readdir.length-1].link"><img :src="this.readdir[this.readdir.length-1].image" /></a>
                 </div>
 
                 <!-- 图片轮播区域 内容容器 -->
                 <div class="mui-slider-item" v-for="(item, i) in readdir" :key="i">
-                    <a href="" @click.prevent><img :src="item" /></a>
+                    <a :href="item.link" @click.prevent><img :src="item.image" /></a>
                 </div>
 
                 <!-- 支持循环，需要重复图片 第一个 节点 -->
                 <div class="mui-slider-item mui-slider-item-duplicate">
-                    <a href=""><img :src="this.readdir[0]" /></a>
+                    <a :href="this.readdir[0].link"><img :src="this.readdir[0].image" /></a>
                 </div>
 
             </div>

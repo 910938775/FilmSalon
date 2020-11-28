@@ -176,7 +176,8 @@ export default {
             // 封装 请求数据 对象
             let getData = {
                 url: this.Verification,
-                tool: this
+                tool: this,
+                pattern: 'post'
             };
             // 实例化请求对象
             let VueOB = new DataRequest();

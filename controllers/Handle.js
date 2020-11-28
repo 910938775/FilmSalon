@@ -3,12 +3,13 @@
 // 导入 文件操作 模块
 var fs = require('fs')
 
-// 导入 数据操作 模块
-var dbHandle = require('./DataHandle.js')
+// 导入 MD5 加密模块
+var MD5 = require('blueimp-md5')
 
 
-/* 获取 文件夹目录 */
-// 参数：文件夹路径
+/** 获取 文件夹目录
+ *  @param dir 文件夹路径
+ */
 exports.FindDir = function(dir) {
     // 处理 异步函数 readdir 的 Promise 函数
     return new Promise(function(resolve, reject) {
@@ -27,8 +28,11 @@ exports.FindDir = function(dir) {
 }
 
 
-/* 保存文件 */
-// 参数：文件，文件保存路径，返回文件信息
+/** 保存文件
+ * @param files 文件
+ * @param filePath 文件保存路径
+ * @param callback 返回文件信息
+ */
 exports.SaveFile = function(files, filePath, callback) {
     // 接受 文件信息 伪数组对象
     let fileInfos = [];
@@ -56,8 +60,9 @@ exports.SaveFile = function(files, filePath, callback) {
 }
 
 
-/* 删除文件 */
-// 参数：文件保存路径
+/** 删除文件
+ * @param path 文件保存路径
+ */
 exports.RemoveFile = function(path) {
     // 处理 异步函数 unlink 的 Promise 函数
     return new Promise(function(resolve, reject) {
@@ -74,8 +79,9 @@ exports.RemoveFile = function(path) {
 }
 
 
-/* 读取文件 */
-// 参数：文件保存路径
+/** 读取文件
+ * @param path 文件保存路径
+ */
 exports.ReadFile = function(path) {
     // 处理 异步函数 readFile 的 Promise 函数
     return new Promise(function(resolve, reject) {
@@ -92,8 +98,25 @@ exports.ReadFile = function(path) {
 }
 
 
-/* 数据库热度值排序 */
-// 参数：排序对象（原始数据库数据）
+/** 生成数据请求 Token 字符串
+ * @returns Token
+ */
+exports.token = function() {
+    // 随机生成十位字母：小写字母
+    let letter = '';
+    for (let i = 0; i < 10; i++) {
+        letter += String.fromCharCode(Math.round(Math.random() * -25) + 122)
+    };
+    // 加密处理
+    letter = MD5(letter);
+    // 返回 Token
+    return letter
+}
+
+
+/** 数据库热度值排序
+ * @param search 排序对象（原始数据库数据）
+ */
 exports.Ranking = function(search) {
     // 保存 排序数据
     let Rdata = search;

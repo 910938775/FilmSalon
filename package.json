@@ -10,6 +10,7 @@
         "body-parser": "^1.19.0",
         "bootstrap": "^4.3.1",
         "connect-history-api-fallback": "^1.6.0",
+        "connect-redis": "^4.0.4",
         "express": "^4.17.1",
         "express-art-template": "^1.0.1",
         "express-session": "^1.17.0",
@@ -23,10 +24,13 @@
         "node-sass": "^4.13.0",
         "open-iconic": "git+https://github.com/iconic/open-iconic.git",
         "popper.js": "^1.16.0",
+        "redis": "^3.0.2",
+        "spidex": "^2.2.1",
         "vue": "^2.6.10",
         "vue-resource": "^1.5.1",
         "vue-router": "^3.1.3",
-        "vue-server-renderer": "^2.6.10"
+        "vue-server-renderer": "^2.6.10",
+        "xmldom": "^0.3.0"
     },
     "devDependencies": {
         "babel-core": "^6.26.3",

@@ -1,5 +1,6 @@
-/* 封装对外屏蔽 [ 数据库类型、内部关键字、数据结构 ] 的数据库操作对象 */
-// @params：dbmodel 数据库模型 [必填]
+/**  封装对外屏蔽 [ 数据库类型、内部关键字、数据结构 ] 的数据库操作对象 
+ * @param dbmodel 数据库模型 [必填]
+ */
 var DataHandle = function(dbmodel) {
     // 数据库模型
     this.dbmodel = dbmodel;
@@ -21,30 +22,33 @@ var DataHandle = function(dbmodel) {
 }
 
 
-/* 数据校验 返回错误 */
-// @params 1：check 要检验的数据 [必填]
-// @params 2：type 数据类型 [选填]
-// @params [check]：dbmodel --- 数据库模型 Function
-// @params [check]：findWord --- 查询关键字 Object
-// @params [check]：saveWord --- 保存关键字 Object
-// @params [check]：updataWord --- 更新关键字 Object
-// @params [check]：removeWord --- 删除关键字 Object
-// @params [check]：db --- 原始数据库关键字 Object
-// @params [check]：Fdb --- 原始数据库查询关键字 Object
-// @params [check]：options --- 筛选的条件 Object
-// @params [check]：processValue --- 处理原始数据 Object
-// @params [check]：useWord --- 读取关键字 Array
-// @params [check]：getData --- 查询数据 Array
-// @params [check]：updata --- 更新开关 Boolean
-// @params [check]：keyWord --- 关键字 String
-// @params [check]：Academics --- 关键字 String
-// @params [check]：Films --- 关键字 String
-// @params [check]：ImageText --- 关键字 String
-// @params [check]：Videos --- 关键字 String
-// @params [check]：Users --- 关键字 String
-// @params [check]：Scroll --- 关键字 String
-// @params [check]：process --- 处理关键字 String
-// @params [check]：error --- 错误信息 Error
+/** 数据校验 返回错误
+ * @param check 要检验的数据 [必填]
+ * @param type 数据类型 [选填]
+ * @param [check]：dbmodel --- 数据库模型 Function
+ * @param [check]：findWord --- 查询关键字 Object
+ * @param [check]：saveWord --- 保存关键字 Object
+ * @param [check]：updataWord --- 更新关键字 Object
+ * @param [check]：removeWord --- 删除关键字 Object
+ * @param [check]：db --- 原始数据库关键字 Object
+ * @param [check]：Fdb --- 原始数据库查询关键字 Object
+ * @param [check]：options --- 筛选的条件 Object
+ * @param [check]：processValue --- 处理原始数据 Object
+ * @param [check]：saveWords --- 数据库结构 Object
+ * @param [check]：saveData --- 保存数据 Object
+ * @param [check]：useWord --- 读取关键字 Array
+ * @param [check]：getData --- 查询数据 Array
+ * @param [check]：updata --- 更新开关 Boolean
+ * @param [check]：keyWord --- 关键字 String
+ * @param [check]：Academics --- 关键字 String
+ * @param [check]：Films --- 关键字 String
+ * @param [check]：ImageText --- 关键字 String
+ * @param [check]：Videos --- 关键字 String
+ * @param [check]：Users --- 关键字 String
+ * @param [check]：Scroll --- 关键字 String
+ * @param [check]：process --- 处理关键字 String
+ * @param [check]：error --- 错误信息 Error
+ */
 DataHandle.prototype.Error = function(check, type) {
     // 1. 清空 错误名称变量 错误信息变量
     this.ErrorName = '';
@@ -116,11 +120,12 @@ DataHandle.prototype.Error = function(check, type) {
 }
 
 
-/* 数据库 数据读取 */
-// @params 1：findWord 查询关键字 [必填]
-// @params 2：useWord 读取关键字 [选填]
-// @params 3：options 筛选关键字 [选填]
-// @params 4 [options 扩展]：FindView 查询视图 [选填]
+/** 数据库 数据读取
+ * @param findWord 查询关键字 [必填]
+ * @param useWord 读取关键字 [选填]
+ * @param options 筛选关键字 [选填]
+ * @param [options 扩展]：FindView 查询视图 [选填]
+ */
 DataHandle.prototype.Find = async function(findWord, useWord, options) {
     // 数据检验
     this.Error(findWord, 'Object');
@@ -129,8 +134,25 @@ DataHandle.prototype.Find = async function(findWord, useWord, options) {
     // 提取查询关键字结构
     let FindWords = {};
     findWord && Object.keys(findWord).forEach(item => {
-        this.KeyWord(item);
-        FindWords[this.dbKeyWord] = findWord[item]
+        if (item === '$or') {
+            // 并列查询关键字
+            FindWords.$or = [];
+            // 并列查询的每个对象
+            findWord.$or.forEach((result, index) => {
+                // 获取每个对象的关键字
+                let key = Object.keys(result)[0];
+                // 查询完整关键字
+                this.KeyWord(key);
+                // 初始化对象
+                FindWords.$or[index] = {};
+                // 封装完整查询关键字
+                FindWords.$or[index][this.dbKeyWord] = findWord.$or[index][key]
+            })
+        } else {
+            // 普通关键字提取
+            this.KeyWord(item);
+            FindWords[this.dbKeyWord] = findWord[item]
+        }
     });
     // 筛选关键字：sort 关键字结构
     options && options.sort && (
@@ -161,10 +183,11 @@ DataHandle.prototype.Find = async function(findWord, useWord, options) {
 }
 
 
-/* 数据库 数据获取 */
-// @params 1：getData 查询数据 [必填]
-// @params 2：useWord 读取关键字 [必填]
-// @notice [getData]：查询数据必须是 原生 的数据库数据
+/** 数据库 数据获取
+ * @param getData 查询数据 [必填]
+ * @param useWord 读取关键字 [必填]
+ * @notice [getData]：查询数据必须是 原生 的数据库数据
+ */
 DataHandle.prototype.Get = function(getData, useWord) {
     // 数据检验
     this.Error(getData, 'Array');
@@ -186,8 +209,9 @@ DataHandle.prototype.Get = function(getData, useWord) {
 }
 
 
-/* 数据库 文档总数量获取 */
-// @params：findWord 查询关键字 [必填]
+/** 数据库 文档总数量获取
+ * @param findWord 查询关键字 [必填]
+ */
 DataHandle.prototype.Count = async function(findWord) {
     // 数据检验
     this.Error(findWord, 'Object');
@@ -211,14 +235,20 @@ DataHandle.prototype.Count = async function(findWord) {
 }
 
 
-/* 数据库 数据保存 */
-// @params：saveWord 保存关键字 [必填]
+/** 数据库 数据保存
+ * @param saveWord 保存关键字 [必填]
+ */
 DataHandle.prototype.Save = async function(saveWord) {
     // 数据检验
     this.Error(saveWord, 'Object');
+    // 获取数据库结构
+    this.KeyWord('SaveDB');
+    // 获取保存数据结构
+    let SaveWords = this.SaveWord(this.dbKeyWord, saveWord);
+    console.log(SaveWords);
     // 保存数据
     // 同步函数以便于返回结果
-    this.dbData = await this.SaveDB(saveWord, this.dbmodel)
+    this.dbData = await this.SaveDB(SaveWords, this.dbmodel)
 
     .catch(
         // 捕获错误
@@ -231,20 +261,67 @@ DataHandle.prototype.Save = async function(saveWord) {
 }
 
 
-/* 数据库 数据更新 */
-// @params 1：findWord 查询关键字 [必填]
-// @params 2：updataWord 更新关键字 [必填]
-// @params 3：updata 自动更新开关 [选填]
+/** 数据库结构提取
+ * @param SaveWords 数据库结构 [必填]
+ * @param SaveData 保存数据 [必填]
+ */
+DataHandle.prototype.SaveWord = function(SaveWords, SaveData) {
+    // 数据检验
+    this.Error(SaveWords, 'Object');
+    this.Error(SaveData, 'Object');
+    // 数据库结构 封装
+    Object.keys(SaveWords).forEach(item => {
+        // 1. 是否是对象
+        (typeof(SaveWords[item]) === "object") && (
+            // 递归 分解对象
+            this.SaveWord(SaveWords[item], SaveData)
+        );
+        // 2. 是否是保存数据的关键字
+        Object.keys(SaveData).forEach((result, index) => {
+            // 保存关键字
+            if (item === result) {
+                SaveWords[item] = SaveData[result]
+            };
+            // 不是保存关键字
+            if (SaveWords[item] === '' && index === Object.keys(SaveData).length - 1) {
+                delete SaveWords[item]
+            }
+        })
+    });
+    // 返回结果
+    return SaveWords
+}
+
+
+/** 数据库 数据更新
+ * @param findWord 查询关键字 [必填]
+ * @param updataWord 更新关键字 [必填]
+ * @param updata 自动更新开关 [选填]
+ */
 DataHandle.prototype.Updata = async function(findWord, updataWord, updata) {
     // 数据检验
     this.Error(findWord, 'Object');
     this.Error(updataWord, 'Object');
     updata && this.Error(updata, 'Boolean');
+    // 提取查询关键字结构
+    let FindWords = {};
+    findWord && Object.keys(findWord).forEach(item => {
+        // 普通关键字提取
+        this.KeyWord(item);
+        FindWords[this.dbKeyWord] = findWord[item]
+    });
+    // 提取更新关键字结构
+    let UpdataWords = {};
+    updataWord && Object.keys(updataWord).forEach(item => {
+        // 普通关键字提取
+        this.KeyWord(item);
+        UpdataWords[this.dbKeyWord] = updataWord[item]
+    });
     // 自动更新开关
     updata && (this.updata = updata);
     // 更新数据
     // 同步函数以便于返回结果
-    this.dbData = await this.UpdataDB(findWord, updataWord, this.dbmodel)
+    this.dbData = await this.UpdataDB(FindWords, UpdataWords, this.dbmodel)
 
     .catch(
         // 捕获错误
@@ -257,14 +334,22 @@ DataHandle.prototype.Updata = async function(findWord, updataWord, updata) {
 }
 
 
-/* 数据库 数据删除 */
-// @params：removeWord 删除关键字 [必填]
+/** 数据库 数据删除
+ * @param removeWord 删除关键字 [必填]
+ */
 DataHandle.prototype.Remove = async function(removeWord) {
     // 数据检验
     this.Error(removeWord, 'Object');
+    // 提取删除关键字结构
+    let RemoveWords = {};
+    removeWord && Object.keys(removeWord).forEach(item => {
+        // 普通关键字提取
+        this.KeyWord(item);
+        RemoveWords[this.dbKeyWord] = removeWord[item]
+    });
     // 删除数据
     // 同步函数以便于返回结果
-    this.dbData = await this.RemoveDB(removeWord, this.dbmodel)
+    this.dbData = await this.RemoveDB(RemoveWords, this.dbmodel)
 
     .catch(
         // 捕获错误
@@ -277,8 +362,9 @@ DataHandle.prototype.Remove = async function(removeWord) {
 }
 
 
-/* 数据库 关键字生成 */
-// @params：keyWord 关键字 [必填]
+/** 数据库 关键字生成
+ * @param keyWord 关键字 [必填]
+ */
 DataHandle.prototype.KeyWord = function(keyWord) {
     // 数据校验
     this.Error(keyWord, 'String');
@@ -309,8 +395,9 @@ DataHandle.prototype.KeyWord = function(keyWord) {
 }
 
 
-/* 学术室数据库 关键字生成 */
-// @params：Academics 关键字 [必填]
+/** 学术室数据库 关键字生成
+ * @param Academics 关键字 [必填]
+ */
 DataHandle.prototype.Academics = function(Academics) {
     // 数据校验
     this.Error(Academics, 'String');
@@ -373,6 +460,39 @@ DataHandle.prototype.Academics = function(Academics) {
         case 'AcademicTag':
             this.dbKeyWord = 'Academics.Message.AcademicTag';
             break;
+        case 'SaveDB':
+            this.dbKeyWord = {
+                Academics: {
+                    Status: '',
+                    Message: {
+                        ID: '',
+                        Name: {
+                            ChineseName: '',
+                            EnglishName: ''
+                        },
+                        Presenter: '',
+                        Time: '',
+                        Country: '',
+                        Area: '',
+                        Production: '',
+                        Explain: '',
+                        EditNumber: '',
+                        EditUsers: '',
+                        AcademicCase: {
+                            CaseName: ''
+                        },
+                        AcademicValue: {
+                            SearchValue: '',
+                            TagValue: '',
+                            ClickValue: ''
+                        },
+                        Ranking: '',
+                        Symbol: '',
+                        AcademicTag: ''
+                    }
+                }
+            };
+            break;
         default:
             this.Error(Academics);
             break
@@ -380,8 +500,9 @@ DataHandle.prototype.Academics = function(Academics) {
 }
 
 
-/* 资料馆数据库 关键字生成 */
-// @params：Films 关键字 [必填]
+/** 资料馆数据库 关键字生成
+ * @param Films 关键字 [必填]
+ */
 DataHandle.prototype.Films = function(Films) {
     // 数据校验
     this.Error(Films, 'String');
@@ -558,6 +679,91 @@ DataHandle.prototype.Films = function(Films) {
         case 'FilmsTag':
             this.dbKeyWord = 'Films.Message.FilmsTag';
             break;
+        case 'SaveDB':
+            this.dbKeyWord = {
+                Films: {
+                    Status: '',
+                    Message: {
+                        ID: '',
+                        Name: {
+                            ChineseName: '',
+                            EnglishName: ''
+                        },
+                        Country: '',
+                        Area: '',
+                        Time: '',
+                        type: '',
+                        Director: '',
+                        Writter: '',
+                        BoxOffice: {
+                            TheLocalBoxOffice: '',
+                            ChinaBoxOffice: '',
+                            WorldWideBoxOffice: ''
+                        },
+                        Grade: {
+                            IMDB: '',
+                            ROTTENTOMATOES: {
+                                TOMATOMETER: '',
+                                ReviewsCounted: '',
+                                AUDIENCESCORE: '',
+                                UserRatings: ''
+                            },
+                            MTC: {
+                                MetaScore: '',
+                                UserScore: ''
+                            },
+                            DouBan: '',
+                            Mtime: ''
+                        },
+                        Plot: '',
+                        Performers: {
+                            Cast: {
+                                Starring: '',
+                                Protagonist: '',
+                                GuestAppearance: '',
+                                SpecialSuggestion: '',
+                                Actor: {
+                                    Role: ''
+                                }
+                            },
+                            Staff: {
+                                Producer: '',
+                                Present: '',
+                                ProductionDesigner: '',
+                                ArtDirector: '',
+                                DirectorOfClothing: '',
+                                DirectorOfPhotography: '',
+                                Gaffer: '',
+                                FightDirector: '',
+                                OriginalMusic: '',
+                                OriginalStory: '',
+                                ScriptGirl: '',
+                                Montage: '',
+                                StageManager: '',
+                                Property: '',
+                                MakeUp: '',
+                                ProductionSoundMixers: '',
+                                HairDresser: '',
+                                VisualEffect: ''
+                            }
+                        },
+                        Corporation: '',
+                        Achievement: '',
+                        Notes: '',
+                        EditNumber: '',
+                        EditUsers: '',
+                        FilmsValue: {
+                            SearchValue: '',
+                            TagValue: '',
+                            WatchValue: ''
+                        },
+                        Ranking: '',
+                        Symbol: '',
+                        FilmsTag: ''
+                    }
+                }
+            };
+            break;
         default:
             this.Error(Films);
             break
@@ -565,8 +771,9 @@ DataHandle.prototype.Films = function(Films) {
 }
 
 
-/* 图文课程数据库 关键字生成 */
-// @params：ImageText 关键字 [必填]
+/** 图文课程数据库 关键字生成
+ * @param ImageText 关键字 [必填]
+ */
 DataHandle.prototype.ImageText = function(ImageText) {
     // 数据校验
     this.Error(ImageText, 'String');
@@ -632,6 +839,42 @@ DataHandle.prototype.ImageText = function(ImageText) {
         case 'Comment':
             this.dbKeyWord = 'ImageText.Message.Comment';
             break;
+        case 'SaveDB':
+            this.dbKeyWord = {
+                ImageText: {
+                    Status: '',
+                    Message: {
+                        ID: '',
+                        Name: '',
+                        Author: '',
+                        Time: {
+                            createTime: '',
+                            updateTime: ''
+                        },
+                        Content: '',
+                        Production: '',
+                        Catalogue: '',
+                        Partition: '',
+                        CourseValue: {
+                            SearchValue: '',
+                            TagValue: '',
+                            learningValue: ''
+                        },
+                        OtherValue: {
+                            SearchValue: '',
+                            TagValue: '',
+                            learningValue: ''
+                        },
+                        Ranking: '',
+                        Symbol: '',
+                        ImageTextTag: {
+                            Marker: ''
+                        },
+                        Comment: ''
+                    }
+                }
+            };
+            break;
         default:
             this.Error(ImageText);
             break
@@ -639,8 +882,9 @@ DataHandle.prototype.ImageText = function(ImageText) {
 }
 
 
-/* 视频课程数据库 关键字生成 */
-// @params：Videos 关键字 [必填]
+/** 视频课程数据库 关键字生成
+ * @param Videos 关键字 [必填]
+ */
 DataHandle.prototype.Videos = function(Videos) {
     // 数据校验
     this.Error(Videos, 'String');
@@ -709,6 +953,43 @@ DataHandle.prototype.Videos = function(Videos) {
         case 'Comment':
             this.dbKeyWord = 'Videos.Message.Comment';
             break;
+        case 'SaveDB':
+            this.dbKeyWord = {
+                Videos: {
+                    Status: '',
+                    Message: {
+                        ID: '',
+                        Name: '',
+                        Author: '',
+                        Time: {
+                            createTime: '',
+                            updateTime: ''
+                        },
+                        Content: '',
+                        Production: '',
+                        Catalogue: '',
+                        Partition: '',
+                        CourseValue: {
+                            SearchValue: '',
+                            TagValue: '',
+                            learningValue: ''
+                        },
+                        OtherValue: {
+                            SearchValue: '',
+                            TagValue: '',
+                            learningValue: ''
+                        },
+                        Ranking: '',
+                        Symbol: '',
+                        VideoTag: {
+                            ScheduleTag: '',
+                            Marker: ''
+                        },
+                        Comment: ''
+                    }
+                }
+            };
+            break;
         default:
             this.Error(Videos);
             break
@@ -716,8 +997,9 @@ DataHandle.prototype.Videos = function(Videos) {
 }
 
 
-/* 用户数据库 关键字生成 */
-// @params：Users 关键字 [必填]
+/** 用户数据库 关键字生成
+ * @param Users 关键字 [必填]
+ */
 DataHandle.prototype.Users = function(Users) {
     // 数据校验
     this.Error(Users, 'String');
@@ -759,6 +1041,9 @@ DataHandle.prototype.Users = function(Users) {
         case 'Email':
             this.dbKeyWord = 'Users.Message.Email';
             break;
+        case 'Phone':
+            this.dbKeyWord = 'Users.Message.Phone';
+            break;
         case 'ContributionValue':
             this.dbKeyWord = 'Users.Message.ContributionValue';
             break;
@@ -798,6 +1083,40 @@ DataHandle.prototype.Users = function(Users) {
         case 'OtherEditValue':
             this.dbKeyWord = 'Users.Message.OtherEditValue';
             break;
+        case 'SaveDB':
+            this.dbKeyWord = {
+                Users: {
+                    Status: '',
+                    Message: {
+                        ID: '',
+                        NickName: '',
+                        Gender: '',
+                        Age: '',
+                        Birthdate: '',
+                        NativePlace: '',
+                        Hobby: '',
+                        Introduction: '',
+                        Account: '',
+                        Password: '',
+                        Email: '',
+                        Phone: '',
+                        ContributionValue: '',
+                        Ranking: '',
+                        Symbol: '',
+                        MonthContributionValue: '',
+                        DateContributionValue: '',
+                        FilmsContributionValue: '',
+                        FilmsEditValue: '',
+                        AcademicContributionValue: '',
+                        AcademicEditValue: '',
+                        CourseContributionValue: '',
+                        CourseEditValue: '',
+                        OtherContributionValue: '',
+                        OtherEditValue: ''
+                    }
+                }
+            };
+            break;
         default:
             this.Error(Users);
             break
@@ -805,8 +1124,9 @@ DataHandle.prototype.Users = function(Users) {
 }
 
 
-/* 滚动栏数据库 关键字生成 */
-// @params：Scroll 关键字 [必填]
+/** 滚动栏数据库 关键字生成
+ * @param Scroll 关键字 [必填]
+ */
 DataHandle.prototype.Scroll = function(Scroll) {
     // 数据校验
     this.Error(Scroll, 'String');
@@ -827,6 +1147,19 @@ DataHandle.prototype.Scroll = function(Scroll) {
         case 'notes':
             this.dbKeyWord = 'Scroll.Message.notes';
             break;
+        case 'SaveDB':
+            this.dbKeyWord = {
+                Scroll: {
+                    Status: '',
+                    Message: {
+                        ID: '',
+                        Name: '',
+                        link: '',
+                        notes: ''
+                    }
+                }
+            };
+            break;
         default:
             this.Error(Scroll);
             break
@@ -834,9 +1167,10 @@ DataHandle.prototype.Scroll = function(Scroll) {
 }
 
 
-/* 数据库 原始保存数据 封装方法 */
-// @params 1：db 保存的数据 [必填]
-// @params 2：dbmodel 对应的数据模型 [必填]
+/** 数据库 原始保存数据 封装方法
+ * @param db 保存的数据 [必填]
+ * @param dbmodel 对应的数据模型 [必填]
+ */
 DataHandle.prototype.SaveDB = function(db, dbmodel) {
     // 数据检验
     this.Error(db, 'Object');
@@ -856,10 +1190,11 @@ DataHandle.prototype.SaveDB = function(db, dbmodel) {
 }
 
 
-/* 数据库 原始查询数据 封装方法 */
-// @params 1：db 查询的数据 [必填]
-// @params 2：dbmodel 对应的数据模型 [必填]
-// @params 3：options 筛选的条件 [选填]
+/** 数据库 原始查询数据 封装方法
+ * @param db 查询的数据 [必填]
+ * @param dbmodel 对应的数据模型 [必填]
+ * @param options 筛选的条件 [选填]
+ */
 DataHandle.prototype.FindDB = function(db, dbmodel, options) {
     // 数据检验
     this.Error(db, 'Object');
@@ -880,10 +1215,11 @@ DataHandle.prototype.FindDB = function(db, dbmodel, options) {
 }
 
 
-/* 数据库 原始更新数据 封装方法 */
-// @params 1：Fdb 查询的数据 [必填]
-// @params 2：db 更新的数据 [必填]
-// @params 3：dbmodel 对应的数据模型 [必填]
+/** 数据库 原始更新数据 封装方法
+ * @param Fdb 查询的数据 [必填]
+ * @param db 更新的数据 [必填]
+ * @param dbmodel 对应的数据模型 [必填]
+ */
 DataHandle.prototype.UpdataDB = function(Fdb, db, dbmodel) {
     // 数据检验
     this.Error(Fdb, 'Object');
@@ -905,9 +1241,10 @@ DataHandle.prototype.UpdataDB = function(Fdb, db, dbmodel) {
 }
 
 
-/* 数据库 原始删除数据 封装方法 */
-// @params 1：db 删除的数据 [必填]
-// @params 2：dbmodel 对应的数据模型 [必填]
+/** 数据库 原始删除数据 封装方法
+ * @param db 删除的数据 [必填]
+ * @param dbmodel 对应的数据模型 [必填]
+ */
 DataHandle.prototype.RemoveDB = function(db, dbmodel) {
     // 数据检验
     this.Error(db, 'Object');
@@ -927,9 +1264,10 @@ DataHandle.prototype.RemoveDB = function(db, dbmodel) {
 }
 
 
-/* 数据库 文档总数量 封装方法 */
-// @params 1：db 查询的数据 [必填]
-// @params 2：dbmodel 对应的数据模型 [必填]
+/** 数据库 文档总数量 封装方法
+ * @param db 查询的数据 [必填]
+ * @param dbmodel 对应的数据模型 [必填]
+ */
 DataHandle.prototype.CountDB = function(db, dbmodel) {
     // 数据检验
     this.Error(db, 'Object');
@@ -949,9 +1287,10 @@ DataHandle.prototype.CountDB = function(db, dbmodel) {
 }
 
 
-/* 数据库 原始数据 再处理方法 */
-// @params 1：process 处理关键字 [必填]
-// @params 2：processValue 处理原始数据 [必填]
+/** 数据库 原始数据 再处理方法
+ * @param process 处理关键字 [必填]
+ * @param processValue 处理原始数据 [必填]
+ */
 DataHandle.prototype.ProcessDB = function(process, processValue) {
     // 数据检验
     this.Error(process, 'String');

@@ -70,7 +70,7 @@
                         <span class="CourseRanking">排名：{{ ITIndex.Ranking }}</span>
 
                         <!-- 其他课程组件 热度值容器 -->
-                        <span class="CourseValue">热度值：{{ ITIndex.CourseValue }}</span>
+                        <span class="CourseValue">热度值：{{ ITIndex.OtherValue }}</span>
                     </div>
 
                     <!-- 其他课程组件 名称外部容器 -->

@@ -1,9 +1,10 @@
-/* 封装对外屏蔽 [ 请求过程 ] 的前台数据请求对象 */
-// @params：UsrData 用户参数 [必填]
-// @params [UsrData]：pattern 请求方法 [选填]
-// @params [UsrData]：content 请求数据 [选填]
-// @params [UsrData]：url 请求地址 [必填]
-// @params [UsrData]：tool 请求工具 [必填]
+/** 封装对外屏蔽 [ 请求过程 ] 的前台数据请求对象
+ * @param UsrData 用户参数 [必填]
+ * @param [UsrData]：pattern 请求方法 [选填]
+ * @param [UsrData]：content 请求数据 [选填]
+ * @param [UsrData]：url 请求地址 [必填]
+ * @param [UsrData]：tool 请求工具 [必填]
+ */
 var DataRequest = function(UsrData) {
     // 用户传参
     UsrData && (this.UsrData = Object.assign({
@@ -32,17 +33,18 @@ var DataRequest = function(UsrData) {
 }
 
 
-/* 数据校验 返回错误 */
-// @params 1：detection 要检验的数据 [必填]
-// @params 2：type 数据类型 [选填]
-// @params [detection]：UsrData --- 用户参数 Object
-// @params [detection]：vueData --- 用户参数 Object
-// @params [detection]：VueGets --- 用户参数 Object
-// @params [detection]：VuePosts --- 用户参数 Object
-// @params [detection]：content --- 用户参数-请求数据 Object
-// @params [detection]：url --- 用户参数-数据请求地址 String
-// @params [detection]：pattern --- 用户参数-请求方法 String
-// @params [detection]：tool --- 用户参数-数据请求工具 Function
+/** 数据校验 返回错误
+ * @param detection 要检验的数据 [必填]
+ * @param type 数据类型 [选填]
+ * @param [detection]：UsrData --- 用户参数 Object
+ * @param [detection]：vueData --- 用户参数 Object
+ * @param [detection]：VueGets --- 用户参数 Object
+ * @param [detection]：VuePosts --- 用户参数 Object
+ * @param [detection]：content --- 用户参数-请求数据 Object
+ * @param [detection]：url --- 用户参数-数据请求地址 String
+ * @param [detection]：pattern --- 用户参数-请求方法 String
+ * @param [detection]：tool --- 用户参数-数据请求工具 Function
+ */
 DataRequest.prototype.Error = function(detection, type) {
     // 1. 清空 错误名称变量 错误信息变量
     this.ErrorName = '';
@@ -105,12 +107,13 @@ DataRequest.prototype.Error = function(detection, type) {
 }
 
 
-/* vue 数据请求 方法 */
-// @params：vueData 用户参数 [必填]
-// @params [vueData]：pattern 请求方法 [选填]
-// @params [vueData]：content 请求数据 [选填]
-// @params [vueData]：url 请求地址 [必填]
-// @params [vueData]：tool 请求工具 [必填]
+/** vue 数据请求 方法
+ * @param vueData 用户参数 [必填]
+ * @param [vueData]：pattern 请求方法 [选填]
+ * @param [vueData]：content 请求数据 [选填]
+ * @param [vueData]：url 请求地址 [必填]
+ * @param [vueData]：tool 请求工具 [必填]
+ */
 DataRequest.prototype.Vue = async function(vueData) {
     // 参数检测
     !this.UsrData && !vueData && (this.Error(Error) || (
@@ -165,10 +168,11 @@ DataRequest.prototype.Vue = async function(vueData) {
 }
 
 
-/* vue 数据请求 get 方法 */
-// @params：VueGets 用户参数 [必填]
-// @params [VueGets]：url 请求地址 [必填]
-// @params [VueGets]：tool 请求工具 [必填]
+/** vue 数据请求 get 方法
+ * @param VueGets 用户参数 [必填]
+ * @param [VueGets]：url 请求地址 [必填]
+ * @param [VueGets]：tool 请求工具 [必填]
+ */
 DataRequest.prototype.VueGet = async function(VueGets) {
     // 参数检测
     !this.UsrData && !VueGets && (this.Error(Error) || (
@@ -211,11 +215,12 @@ DataRequest.prototype.VueGet = async function(VueGets) {
 }
 
 
-/* vue 数据请求 post 方法 */
-// @params：VuePosts 用户参数 [必填]
-// @params [VuePosts]：content 请求数据 [必填]
-// @params [VuePosts]：url 请求地址 [必填]
-// @params [VuePosts]：tool 请求工具 [必填]
+/** vue 数据请求 post 方法
+ * @param VuePosts 用户参数 [必填]
+ * @param [VuePosts]：content 请求数据 [必填]
+ * @param [VuePosts]：url 请求地址 [必填]
+ * @param [VuePosts]：tool 请求工具 [必填]
+ */
 DataRequest.prototype.VuePost = async function(VuePosts) {
     // 参数检测
     !this.UsrData && !VuePosts && (this.Error(Error) || (

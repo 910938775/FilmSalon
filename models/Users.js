@@ -99,7 +99,14 @@ var FilmsalonSchema = new Schema({
                 type: String,
                 // 邮箱 匹配规则：xxx@xxx.com 格式
                 match: /(.*)@(.*)\.com/,
-                default: '无'
+                default: 'xxx@xxx.com'
+            },
+            // 手机号
+            Phone: {
+                type: Number,
+                // 手机号 匹配规则
+                match: /^1[0-9]{10}$/,
+                default: 10000000000
             },
             // 总贡献值
             ContributionValue: {
