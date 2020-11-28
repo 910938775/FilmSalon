@@ -14,7 +14,7 @@
         "express": "^4.17.1",
         "express-art-template": "^1.0.1",
         "express-session": "^1.17.0",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "json5": "^2.1.1",
         "mint-ui": "^2.2.13",
         "moment": "^2.24.0",
