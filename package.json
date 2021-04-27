@@ -24,7 +24,7 @@
         "node-sass": "^4.13.0",
         "open-iconic": "git+https://github.com/iconic/open-iconic.git",
         "popper.js": "^1.16.0",
-        "redis": "^3.0.2",
+        "redis": "^3.1.1",
         "spidex": "^2.2.1",
         "vue": "^2.6.10",
         "vue-resource": "^1.5.1",
